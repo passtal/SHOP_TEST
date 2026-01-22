@@ -1,3 +1,5 @@
+<%@ include file="/layout/jstl.jsp" %>
+<%@ include file="/layout/common.jsp" %>
 <%@page import="shop.dto.User"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>

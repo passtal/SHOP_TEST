@@ -1,4 +1,6 @@
 <!-- 로그인 처리 -->
+<%@ include file="/layout/jstl.jsp" %>
+<%@ include file="/layout/common.jsp" %>
 <%@page import="java.util.UUID"%>
 <%@page import="java.net.URLEncoder"%>
 <%@page import="shop.dto.User"%>

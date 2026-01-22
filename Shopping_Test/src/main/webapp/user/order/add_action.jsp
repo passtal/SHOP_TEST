@@ -1,3 +1,5 @@
+<%@ include file="/layout/jstl.jsp" %>
+<%@ include file="/layout/common.jsp" %>
 <%@page import="shop.dao.ProductRepository"%>
 <%@page import="shop.dao.ProductIORepository"%>
 <%@page import="shop.dto.Product"%>

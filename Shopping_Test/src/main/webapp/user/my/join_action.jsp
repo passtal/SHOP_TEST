@@ -1,6 +1,8 @@
 <!-- 
 	회원 가입 처리
  -->
+<%@ include file="/layout/jstl.jsp" %>
+<%@ include file="/layout/common.jsp" %>
 <%@page import="shop.dao.UserRepository"%>
 <%@page import="shop.dto.User"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8"

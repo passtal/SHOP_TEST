@@ -1,3 +1,5 @@
+<%@ include file="/layout/jstl.jsp" %>
+<%@ include file="/layout/common.jsp" %>
 <%@page import="java.util.UUID"%>
 <%@page import="java.io.File"%>
 <%@page import="java.nio.file.Files"%>
