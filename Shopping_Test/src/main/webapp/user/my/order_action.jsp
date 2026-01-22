@@ -3,6 +3,8 @@
 <%@page import="shop.dao.OrderRepository"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
+<%@ include file="/layout/jstl.jsp" %>
+<%@ include file="/layout/common.jsp" %>
 <%
 	// TODO: 주문 조회 기능 구현
 	// 1. 파라미터 수집(전화번호, 주문비밀번호)

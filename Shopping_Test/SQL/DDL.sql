@@ -7,6 +7,12 @@
  * order
  */
 
+--DROP database IF EXISTS `aloha`;
+--
+--CREATE database `aloha`;
+--
+--USE `aloha`;
+
 -- 외래키 제약조건 삭제
 ALTER TABLE product_io DROP FOREIGN KEY product_id_FK;
 ALTER TABLE product_io DROP FOREIGN KEY order_no_FK;

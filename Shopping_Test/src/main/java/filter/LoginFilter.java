@@ -16,14 +16,12 @@ import jakarta.servlet.http.HttpSession;
 import shop.dao.UserRepository;
 import shop.dto.PersistentLogin;
 
-/**
- * Servlet Filter implementation class LoginFilter
- */
 @WebFilter("/*")
 public class LoginFilter implements Filter {
 	
 	Cookie[] cookies;
 	UserRepository userDAO;
+	
     public LoginFilter() {
         super();
     }
@@ -33,12 +31,34 @@ public class LoginFilter implements Filter {
     }
 
 	public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException, ServletException {
-		/**
-		 * TODO: 쿠키 정보와 DB 정보를 확인하여 자동 로그인 기능을 구현
-		 * - 쿠키 정보 "rememberMe", "token"을 가져와 변수에 저장한다.
-		 * - 쿠키 정보 "rememberMe", "token" 가 모두 존재하는 경우, 자동 로그인을 설정한 경우로 판단한다.
-		 * - 자동 로그인을 설정한 경우, 테이블 [persistent_logins] 에서 해당 token을 조건으로 login_id를 조회하여 session 에 "loginId" 라는 속성명으로 등록한다.
-		 */
+		
+		HttpServletRequest req = (HttpServletRequest) request;
+		cookies = req.getCookies();
+		
+		String rememberMe = null;
+		String token = null;
+		
+		// 1. 쿠키 정보 가져오기
+		if (cookies != null) {
+			for (Cookie cookie : cookies) {
+				String cookieName = cookie.getName();
+				String cookieValue = URLDecoder.decode(cookie.getValue(), "UTF-8");
+				
+				if(cookieName.equals("rememberMe")) rememberMe = cookieValue;
+				if(cookieName.equals("token")) token = cookieValue;
+			}
+		}
+		
+		// 2. 자동 로그인 확인
+		if (rememberMe != null && token != null) {
+			PersistentLogin persistentLogin = userDAO.selectTokenByToken(token);
+			
+			// 토큰이 유효하면 로그인 처리
+			if (persistentLogin != null) {
+				HttpSession session = req.getSession();
+				session.setAttribute("loginId", persistentLogin.getUserId());
+			}
+		}
 		
 		chain.doFilter(request, response);
 	}

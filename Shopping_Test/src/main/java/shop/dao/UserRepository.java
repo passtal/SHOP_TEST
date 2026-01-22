@@ -4,8 +4,8 @@ import java.sql.SQLException;
 import java.util.UUID;
 
 import shop.dto.PersistentLogin;
-import shop.dto.Product;
 import shop.dto.User;
+
 
 public class UserRepository extends JDBConnection {
 	
@@ -15,7 +15,27 @@ public class UserRepository extends JDBConnection {
 	 * @return
 	 */
 	public int insert(User user) {
-		// TODO: 회원 등록 기능 구현
+		int result = 0;
+		String sql = "INSERT INTO user (id, password, name, gender, birth, mail, phone, address)"
+					+ "VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
+		
+		try {
+			psmt = con.prepareStatement(sql);
+			psmt.setString(1, user.getId());
+			psmt.setString(2, user.getPassword());
+			psmt.setString(3, user.getName());
+			psmt.setString(4, user.getGender());
+			psmt.setString(5, user.getBirth());
+			psmt.setString(6, user.getMail());
+			psmt.setString(7, user.getPhone());
+			psmt.setString(8, user.getAddress());
+			
+			result = psmt.executeUpdate();
+		} catch (SQLException e) {
+			System.err.println("회원 등록 중 오류가 발생했습니다.");
+			e.printStackTrace();
+		}
+		return result;
 	}
 	
 	
@@ -26,7 +46,36 @@ public class UserRepository extends JDBConnection {
 	 * @return
 	 */
 	public User login(String id, String pw) {
-		// TODO: 로그인을 위한 사용자 조회 기능 구현
+		User user = null;
+		String sql = "SELECT * "
+					+ "FROM user"
+					+ "WHERE id = ?"
+					+ "AND password = ?";
+		
+		try {
+			psmt = con.prepareStatement(sql);
+			psmt.setString(1, id);
+			psmt.setString(2, pw);
+			
+			rs = psmt.executeQuery();
+			if (rs.next()) {
+				user = new User();
+				user.setId(rs.getString("id"));
+				user.setPassword(rs.getString("pw"));
+				user.setName(rs.getString("name"));
+				user.setGender(rs.getString("gender"));
+				user.setBirth(rs.getString("birth"));
+				user.setMail(rs.getString(rs.getString("mail")));
+				user.setPhone(rs.getString("phone"));
+				user.setAddress(rs.getString("address"));
+				user.setRegistDay(rs.getString("reigst_day"));
+			}
+			rs.close();
+		} catch (Exception e) {
+			System.err.println("사용자 조회 중 오류가 발생했습니다.");
+			e.printStackTrace();
+		}
+		return user;
 	}
 	
 	
@@ -35,11 +84,37 @@ public class UserRepository extends JDBConnection {
 	/**
 	 * 로그인을 위한 사용자 조회
 	 * @param id
-	 * @param pw
 	 * @return
 	 */
 	public User getUserById(String id) {
-		// TODO: ID로 사용자 조회 기능 구현	
+		User user = null;
+		String sql = "SELECT *"
+					+ "FROM user"
+					+ "WHERE id = ?";
+		
+		try {
+			psmt = con.prepareStatement(sql);
+			psmt.setString(1, id);
+			
+			rs = psmt.executeQuery();
+			if (rs.next()) {
+				user = new User();
+				user.setId(rs.getString("id"));
+				user.setPassword(rs.getString("pw"));
+				user.setName(rs.getString("name"));
+				user.setGender(rs.getString("gender"));
+				user.setBirth(rs.getString("birth"));
+				user.setMail(rs.getString(rs.getString("mail")));
+				user.setPhone(rs.getString("phone"));
+				user.setAddress(rs.getString("address"));
+				user.setRegistDay(rs.getString("reigst_day"));
+			}
+			rs.close();
+		} catch (Exception e) {
+			System.err.println("사용자 조회 중 오류가 발생했습니다.");
+			e.printStackTrace();
+		}
+		return user;
 	}
 	
 	
@@ -49,7 +124,32 @@ public class UserRepository extends JDBConnection {
 	 * @return
 	 */
 	public int update(User user) {
-		// TODO: 회원 수정 기능 구현
+		int result = 0;
+		String sql = "UPDATE user"
+					+ "SET name=?"
+					+ ", gender=?"
+					+ ", birth=?"
+					+ ", mail=?"
+					+ ", phone=?"
+					+ ", address=?"
+				    + "WHERE id=?";
+		
+		try {
+			psmt = con.prepareStatement(sql);
+			psmt.setString(1, user.getName());
+			psmt.setString(2, user.getGender());
+			psmt.setString(3, user.getBirth());
+			psmt.setString(4, user.getMail());
+			psmt.setString(5, user.getPhone());
+			psmt.setString(6, user.getAddress());
+			psmt.setString(7, user.getId());
+			
+			result = psmt.executeUpdate();
+		} catch (SQLException e) {
+			System.err.println("회원 수정 중 오류가 발생했습니다.");
+			e.printStackTrace();
+		}
+		return result;
 	}
 
 
@@ -59,7 +159,19 @@ public class UserRepository extends JDBConnection {
 	 * @return
 	 */
 	public int delete(String id) {
-		// TODO: 회원 삭제 기능 구현
+		int result = 0;
+		String sql = "DELETE FROM user WHERE id = ?";
+		
+		try {
+			psmt = con.prepareStatement(sql);
+			psmt.setString(1, id);
+			
+			result = psmt.executeUpdate();
+		} catch (SQLException e) {
+			System.err.println("회원 삭제 중 오류가 발생했습니다.");
+			e.printStackTrace();
+		}
+		return result;
 	}
 	
 	/**
@@ -150,7 +262,8 @@ public class UserRepository extends JDBConnection {
 	 */
 	public String insertToken(String userId) {
 		 int result = 0;
-	    String sql = "INSERT INTO persistent_logins (user_id, token) VALUES (?, ?)";
+	    String sql = "INSERT INTO persistent_logins (user_id, token)"
+	    			+ "VALUES (?, ?)";
 	    String token = UUID.randomUUID().toString();
 	    try {
 	        psmt = con.prepareStatement(sql);
@@ -173,7 +286,10 @@ public class UserRepository extends JDBConnection {
 	 */
 	public String updateToken(String userId) {
 	    int result = 0;
-	    String sql = "UPDATE persistent_logins SET token = ?, date = now() WHERE user_id = ?";
+	    String sql = "UPDATE persistent_logins"
+	    		+ "SET token = ?"
+	    		+ ", date = now()"
+	    		+ "WHERE user_id = ?";
 	    String token = UUID.randomUUID().toString();
 	    try {
 	    	psmt = con.prepareStatement(sql);
