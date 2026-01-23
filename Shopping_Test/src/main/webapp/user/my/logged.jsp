@@ -1,3 +1,4 @@
+<!-- /user/my/logged.jsp -->
 <%@ include file="/layout/jstl.jsp" %>
 <%@ include file="/layout/common.jsp" %>
 <%@ page language="java" contentType="text/html; charset=UTF-8"
@@ -51,13 +52,3 @@
 	</script>
 </body>
 </html>
-
-
-
-
-
-
-
-
-
-

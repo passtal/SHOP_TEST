@@ -1,3 +1,4 @@
+<!-- /user/my/detail.jsp -->
 <%@ include file="/layout/jstl.jsp" %>
 <%@ include file="/layout/common.jsp" %>
 <%@page import="shop.dao.UserRepository"%>
@@ -75,11 +76,3 @@
 	
 </body>
 </html>
-
-
-
-
-
-
-
-

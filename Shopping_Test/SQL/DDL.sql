@@ -1,22 +1,10 @@
-/*
- * 테이블
- * user
- * persistent_logins
- * product
- * product_io
- * order
- */
+-- 1. 데이터베이스 생성
+DROP DATABASE IF EXISTS shop;
 
---DROP database IF EXISTS `aloha`;
---
---CREATE database `aloha`;
---
---USE `aloha`;
+CREATE DATABASE shop;
 
--- 외래키 제약조건 삭제
-ALTER TABLE product_io DROP FOREIGN KEY product_id_FK;
-ALTER TABLE product_io DROP FOREIGN KEY order_no_FK;
-
+-- 2. 데이터베이스 선택
+USE shop;
 
 -- 회원 테이블
 DROP TABLE IF EXISTS `user` CASCADE;

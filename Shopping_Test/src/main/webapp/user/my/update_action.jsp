@@ -1,42 +1,38 @@
 <%@ include file="/layout/jstl.jsp" %>
 <%@ include file="/layout/common.jsp" %>
 <%@page import="shop.dto.User"%>
-<%@ page language="java" contentType="text/html; charset=UTF-8"
-    pageEncoding="UTF-8"%>
+<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <jsp:useBean id="userDAO" class="shop.dao.UserRepository" />
 <%
-	// 회원 정보 파라미터 받기
-	String id = request.getParameter("id");
-	String pw = request.getParameter("pw");
-	String name = request.getParameter("name");
-	String gender = request.getParameter("gender");
-	String year = request.getParameter("year");
-	String month = request.getParameter("month");
-	String day = request.getParameter("day");
-	String birth = year + "/" + month + "/" + day;
-	String email1 = request.getParameter("email1");
-	String email2 = request.getParameter("email2");
-	String email = email1 + "@" + email2;
-	String phone = request.getParameter("phone");
-	String address = request.getParameter("address");
-
-    // 수정한 유저객체 생성
+    request.setCharacterEncoding("UTF-8");
+    
+    String id = request.getParameter("id");
+    String pw = request.getParameter("pw");
+    
     User user = new User();
     user.setId(id);
-    // 비밀번호는 만약 값이 없으면 기존비밀번호 그대로 사용, 값이 있다면 새로운 비밀번호로!
-    if (pw == null || pw =="" ){
-        pw = userDAO.getUserById(id).getPassword(); // 기존패스워드 가져옴
+    
+    // 비밀번호 미입력 시 기존 비밀번호 유지
+    if (pw == null || pw.equals("")) {
+        User oldUser = userDAO.getUserById(id);
+        if (oldUser != null) {
+            pw = oldUser.getPassword();
+        }
     }
+    user.setPassword(pw);
+    
+    user.setName(request.getParameter("name"));
+    user.setGender(request.getParameter("gender"));
+    user.setBirth(request.getParameter("year") + "/" + request.getParameter("month") + "/" + request.getParameter("day"));
+    user.setMail(request.getParameter("email1") + "@" + request.getParameter("email2"));
+    user.setPhone(request.getParameter("phone"));
+    user.setAddress(request.getParameter("address"));
 
-    // TODO: 수정한 유저객체 속성 설정
-    ❓❓❓
-
-    // TODO: 사용자 정보 수정 메서드 호출
-    int result = ❓❓❓
-    if (result >0 ){
+    int result = userDAO.update(user);
+    
+    if (result > 0) {
         response.sendRedirect("complete.jsp?msg=2");
     } else {
-        response.sendRedirect("update.jsp");
+        response.sendRedirect("update.jsp?error");
     }
-
 %>

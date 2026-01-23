@@ -1,13 +1,27 @@
 <%@ include file="/layout/jstl.jsp" %>
 <%@ include file="/layout/common.jsp" %>
-<%@ page language="java" contentType="text/html; charset=UTF-8"
-    pageEncoding="UTF-8"%>
+<%@page import="shop.dao.UserRepository"%>
+<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%	
+	// 자동 로그인 토큰 삭제 (DB & 쿠키)
+	if( loginId != null && !loginId.isEmpty() ) {
+		UserRepository userDAO = new UserRepository();
+		userDAO.deleteToken(loginId);
+	}
 
-	// TODO: 아이디 저장, 자동 로그인 쿠키 삭제
+	// 쿠키 삭제
+	Cookie cookieMe = new Cookie("rememberMe", "");
+	Cookie cookieToken = new Cookie("token", "");
+	cookieMe.setPath("/");
+	cookieToken.setPath("/");
+	cookieMe.setMaxAge(0);
+	cookieToken.setMaxAge(0);
+	response.addCookie(cookieMe);
+	response.addCookie(cookieToken);
+
+	// 세션 무효화
+	session.invalidate();
 	
-	// TODO: 세션 무효화
-	
-	// TODO: 쿠키 전달
-	
+	// 메인 화면으로 이동
+	response.sendRedirect(request.getContextPath() + "/");
 %>

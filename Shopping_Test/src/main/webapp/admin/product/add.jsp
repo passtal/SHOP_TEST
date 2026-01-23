@@ -1,3 +1,4 @@
+<!-- /admin/product/add.jsp -->
 <%@ include file="/layout/jstl.jsp" %>
 <%@ include file="/layout/common.jsp" %>
 <%@page import="shop.dao.ProductRepository"%>
@@ -103,16 +104,3 @@
 	
 </body>
 </html>
-
-
-
-
-
-
-
-
-
-
-
-
-

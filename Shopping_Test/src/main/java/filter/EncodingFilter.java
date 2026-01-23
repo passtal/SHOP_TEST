@@ -8,17 +8,24 @@ import jakarta.servlet.FilterConfig;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.ServletRequest;
 import jakarta.servlet.ServletResponse;
+import jakarta.servlet.annotation.WebFilter;
+import jakarta.servlet.annotation.WebInitParam;
 
+
+@WebFilter(
+    urlPatterns = "/*",
+    initParams = {
+        @WebInitParam(name = "encoding", value = "UTF-8")
+    }
+)
 public class EncodingFilter implements Filter {
 	
 	private String encoding; 
 	
 	@Override
 	public void init(FilterConfig filterConfig) throws ServletException {
-		// web.xml 에서 설정한 초기 파라미터 "encoding"을 가져와 초기화
 		encoding = filterConfig.getInitParameter("encoding");
 		
-		// 설정이 없으면 기본값 UTF-8
 		if (encoding == null) {
 			encoding = "UTF-8";
 		}
@@ -39,7 +46,6 @@ public class EncodingFilter implements Filter {
 	
 	@Override
 	public void destroy() {
-		// 필터 해제 시 처리
 	}
 
 }

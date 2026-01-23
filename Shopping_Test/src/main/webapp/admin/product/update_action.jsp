@@ -1,3 +1,4 @@
+<!-- /admin/product/update_action.jsp -->
 <%@ include file="/layout/jstl.jsp" %>
 <%@ include file="/layout/common.jsp" %>
 <%@page import="java.util.UUID"%>

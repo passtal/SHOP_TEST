@@ -1,3 +1,4 @@
+<!-- /user/my/login.jsp -->
 <%@ include file="/layout/jstl.jsp" %>
 <%@ include file="/layout/common.jsp" %>
 <%@page import="java.net.URLDecoder"%>
@@ -97,11 +98,3 @@
 	<jsp:include page="/layout/script.jsp" />
 </body>
 </html>
-
-
-
-
-
-
-
-

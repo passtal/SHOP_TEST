@@ -10,7 +10,6 @@
 <html>
 <head>
 	<meta charset="UTF-8">
-	
 	<jsp:include page="/layout/meta.jsp" />
 	<jsp:include page="/layout/link.jsp" />
 </head>
@@ -28,34 +27,46 @@
 		
 		// TODO: request에서 쿠키 배열을 가져오기
 		// Cookie[] cookies = ???;
-		Cookie[] cookies = null;
+		Cookie[] cookies = request.getCookies();
 		
 		// TODO: 쿠키 배열이 null이 아니면 반복문으로 각 쿠키 처리
 		// 힌트: 쿠키 이름을 확인하고 switch문으로 각 변수에 값 할당
 		// 힌트: URLDecoder.decode()를 사용하여 쿠키 값을 UTF-8로 디코딩
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
+		if(cookies != null) {
+			for(int i = 0; i < cookies.length; i++) {
+				Cookie cookie = cookies[i];
+				String cookieName = cookie.getName();
+				String cookieValue = URLDecoder.decode(cookie.getValue(), "UTF-8");
+				switch(cookieName) {
+					case "ship_cartId" 			: ship_cartId = cookieValue;		break;
+				 	case "ship_name" 			: ship_name = cookieValue;			break;
+				 	case "ship_date" 			: ship_date = cookieValue;			break;
+				 	case "ship_country" 		: ship_country = cookieValue;		break;
+				 	case "ship_zipCode" 		: ship_zipCode = cookieValue;		break;
+				 	case "ship_addressName" 	: ship_addressName = cookieValue;	break;
+				 	case "ship_phone" 			: ship_phone = cookieValue;			break;
+				}
+			}
+		}		
 		
 		// TODO: 세션에서 장바구니 목록(cartList) 가져오기
 		// 힌트: session.getAttribute("cartList")를 사용하고 List<Product> 타입으로 캐스팅
-		List<Product> cartList = null;
+		List<Product> cartList = (List<Product>) session.getAttribute("cartList");;
+		
 		// TODO: cartList가 null이면 새 ArrayList<Product>() 생성
+		if( cartList == null ) cartList = new ArrayList<Product>();
 		
 		
 		// TODO: 로그인 여부 확인
-		// 힌트: loginId 변수를 확인하여 login 변수(boolean)와 order_type 변수(String) 설정
 		String order_type = "";
 		boolean login = false;
 		
+		if( loginId != null && !loginId.isEmpty() ) {
+			login = true;
+			order_type = "회원 주문";
+		} else {
+			order_type = "비회원 주문";
+		}
 		
 	%>
 	
@@ -96,7 +107,7 @@
 				</tr>
 				<%
 					// TODO: 로그인하지 않은 경우(!login)에만 주문 비밀번호 입력 필드 표시
-					
+					if( !login ) {
 				%>
 				<tr>
 					<td>주문 비밀번호 :</td>
@@ -105,7 +116,7 @@
 					</td>
 				</tr>
 				<%
-					
+					}
 				%>
 			</table>
 		</div>
@@ -130,7 +141,7 @@
 						// TODO: cartList의 모든 상품을 반복하며 출력
 						// 힌트: for문 또는 향상된 for문 사용 (i < cartList.size())
 						
-							// TODO: i번째 상품 가져오기
+						// TODO: i번째 상품 가져오기
 							// Product product = ???;
 							
 							// TODO: 소계 계산 (상품 단가 * 수량)
@@ -138,28 +149,32 @@
 							
 							// TODO: 총 금액에 소계 더하기
 							
+						if(cartList != null) {
+							for(int i = 0; i < cartList.size(); i++) {
+								Product product = cartList.get(i);
+								int total = product.getUnitPrice() * product.getQuantity();
+								sum += total;
 					%>
-					<tr>
-						<td><!-- TODO: 상품명 출력 --></td>			
-						<td><!-- TODO: 단가 출력 --></td>			
-						<td><!-- TODO: 수량 출력 --></td>			
-						// TODO: 장바구니가 비어있는지 확인
-						// 힌트: cartList.isEmpty() 사용
-						
+						<tr>
+							<td><%= product.getName() %></td>			
+							<td><%= product.getUnitPrice() %></td>			
+							<td><%= product.getQuantity() %></td>			
+							<td><%= total %></td>			
+							<td></td>
+						</tr>
+					<%
+							}
+						}
+					%>
+				</tbody>
+				<tfoot>
+					<%
+						if( cartList == null || cartList.isEmpty() ) {
 					%>
 					<tr>
 						<td colspan="5">추가된 상품이 없습니다.</td>	
 					</tr>
-					<%  %>
-					<tr>
-						<td></td>
-						<td></td>
-						<td>총액</td>
-						<td><!-- TODO: 총 금액(sum) 출력 --></td>
-						<td></td>
-					</tr>
-					<%
-						 } else { %>
+					<%  } else { %>
 					<tr>
 						<td></td>
 						<td></td>
@@ -172,19 +187,18 @@
 					%>
 				</tfoot>
 			</table>
-	
 		</div>
 		
 		<!-- 버튼 영역 -->
 		<div class="d-flex justify-content-between mt-5 mb-5">
 			<div class="item">
 				<a href="../shipment/add.jsp" class="btn btn-lg btn-success">이전</a>
-				<!-- 취소 프로세스는 이어서... -->				
-				<a href="" class="btn btn-lg btn-danger">취소</a>				
+				<a href="${ root }/" class="btn btn-lg btn-danger">취소</a>				
 			</div>
 			<div class="item">
 				<input type="hidden" name="login" value="<%= login %>" />
 				<input type="hidden" name="totalPrice" value="<%= sum %>" />
+				<input type="hidden" name="phone" value="<%= ship_phone %>" />
 				<input type="submit" class="btn btn-lg btn-primary" value="주문완료" />	
 			</div>
 		</div>
@@ -195,19 +209,3 @@
 	<jsp:include page="/layout/script.jsp" />
 </body>
 </html>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

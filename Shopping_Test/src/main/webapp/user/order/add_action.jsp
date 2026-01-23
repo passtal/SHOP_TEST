@@ -12,10 +12,6 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
 <% 
-	// TODO: 컨텍스트 경로 얻기
-	// 힌트: request.getContextPath() 메소드 사용
-	String root = "";
-
 	// TODO: 쿠키에 저장된 배송정보를 저장할 변수 선언 및 초기화
 	// 힌트: ship_cartId, ship_name, ship_date, ship_country, ship_zipCode, ship_addressName, ship_phone
 	String ship_cartId = "";
@@ -28,11 +24,32 @@
 	
 	// TODO: request에서 쿠키 배열 가져오기
 	// 힌트: request.getCookies() 메소드 사용
-	Cookie[] cookies = null;
+	Cookie[] cookies = request.getCookies();
+	if(cookies != null) {
+		for(int i = 0; i < cookies.length; i++) {
+			Cookie cookie = cookies[i];
+			String val = URLDecoder.decode(cookie.getValue(), "UTF-8");
+			switch(cookie.getName()) {
+				case "ship_cartId" 			: ship_cartId = val;		break;
+			 	case "ship_name" 			: ship_name = val;			break;
+			 	case "ship_date" 			: ship_date = val;			break;
+			 	case "ship_country" 		: ship_country = val;		break;
+			 	case "ship_zipCode" 		: ship_zipCode = val;		break;
+			 	case "ship_addressName" 	: ship_addressName = val;	break;
+			 	case "ship_phone" 			: ship_phone = val;			break;
+			}
+		}
+	}
 	
 	// TODO: Order 객체 생성
 	// 힌트: new Order() 생성자 사용
-	Order order = null;
+	Order order = new Order();
+	order.setShipName(ship_name);
+	order.setDate(ship_date);
+	order.setCountry(ship_country);
+	order.setZipCode(ship_zipCode);
+	order.setAddress(ship_addressName);
+	order.setPhone(ship_phone);
 	
 	// TODO: 쿠키 배열이 null이 아니면 반복문으로 각 쿠키 처리
 	// 힌트: cookies != null 조건 확인
@@ -66,7 +83,7 @@
 
 	// TODO: 세션에서 로그인 아이디 가져오기
 	// 힌트: session.getAttribute("loginId")를 String 타입으로 캐스팅
-	String loginId = null;
+	loginId = null;
 	
 	// TODO: loginId가 null이면 빈 문자열("")로 설정
 	// 힌트: 삼항 연산자 사용 (loginId != null ? loginId : "")
@@ -93,7 +110,7 @@
 	// TODO: orderPw 파라미터 가져오기 (비회원 주문용 비밀번호)
 	// 힌트: request.getParameter("orderPw")
 	String orderPw = "";
-	TODO: 주문 내역 등록
+	// TODO: 주문 내역 등록
 	// 힌트: OrderRepository 객체 생성 (new OrderRepository())
 	OrderRepository orderDAO = null;
 	
@@ -187,7 +204,7 @@
 	if( cookies != null ) {
 		for(int i = 0 ; i < cookies.length ; i++) {
 			Cookie cookie = cookies[i];
-			String cookieName = cookie.getName();
+			cookieName = cookie.getName();
 			cookie.setValue("");
 			switch(cookieName) {
 			 	case "ship_cartId" 			: cookie.setMaxAge(0); break;

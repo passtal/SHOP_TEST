@@ -1,3 +1,4 @@
+<!-- /user/product/delete_action.jsp -->
 <%@ include file="/layout/jstl.jsp" %>
 <%@ include file="/layout/common.jsp" %>
 <%@page import="java.io.File"%>
@@ -45,20 +46,3 @@
 	response.sendRedirect("editProducts.jsp");			// 상품 편집 목록으로 이동
 	
 %>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

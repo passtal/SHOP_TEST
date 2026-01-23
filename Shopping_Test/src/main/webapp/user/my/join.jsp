@@ -1,3 +1,4 @@
+<!-- /user/my/join.jsp -->
 <%@ include file="/layout/jstl.jsp" %>
 <%@ include file="/layout/common.jsp" %>
 <%@ page language="java" contentType="text/html; charset=UTF-8"
@@ -148,11 +149,3 @@
 	<jsp:include page="/layout/script.jsp" />
 </body>
 </html>
-
-
-
-
-
-
-
-

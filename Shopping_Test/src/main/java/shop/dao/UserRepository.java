@@ -16,7 +16,7 @@ public class UserRepository extends JDBConnection {
 	 */
 	public int insert(User user) {
 		int result = 0;
-		String sql = "INSERT INTO user (id, password, name, gender, birth, mail, phone, address)"
+		String sql = "INSERT INTO user (id, password, name, gender, birth, mail, phone, address) "
 					+ "VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
 		
 		try {
@@ -47,10 +47,7 @@ public class UserRepository extends JDBConnection {
 	 */
 	public User login(String id, String pw) {
 		User user = null;
-		String sql = "SELECT * "
-					+ "FROM user"
-					+ "WHERE id = ?"
-					+ "AND password = ?";
+		String sql = "SELECT * FROM user WHERE id = ? AND password = ?";
 		
 		try {
 			psmt = con.prepareStatement(sql);
@@ -61,14 +58,14 @@ public class UserRepository extends JDBConnection {
 			if (rs.next()) {
 				user = new User();
 				user.setId(rs.getString("id"));
-				user.setPassword(rs.getString("pw"));
+				user.setPassword(rs.getString("password")); // [수정] pw -> password (DB컬럼명)
 				user.setName(rs.getString("name"));
 				user.setGender(rs.getString("gender"));
 				user.setBirth(rs.getString("birth"));
-				user.setMail(rs.getString(rs.getString("mail")));
+				user.setMail(rs.getString("mail")); // [수정] 이중 getString 제거
 				user.setPhone(rs.getString("phone"));
 				user.setAddress(rs.getString("address"));
-				user.setRegistDay(rs.getString("reigst_day"));
+				user.setRegistDay(rs.getString("regist_day")); // [수정] 오타 reigst -> regist
 			}
 			rs.close();
 		} catch (Exception e) {
@@ -79,18 +76,14 @@ public class UserRepository extends JDBConnection {
 	}
 	
 	
-	
-	
 	/**
-	 * 로그인을 위한 사용자 조회
+	 * 로그인을 위한 사용자 조회 (ID로 조회)
 	 * @param id
 	 * @return
 	 */
 	public User getUserById(String id) {
 		User user = null;
-		String sql = "SELECT *"
-					+ "FROM user"
-					+ "WHERE id = ?";
+		String sql = "SELECT * FROM user WHERE id=?";
 		
 		try {
 			psmt = con.prepareStatement(sql);
@@ -100,14 +93,14 @@ public class UserRepository extends JDBConnection {
 			if (rs.next()) {
 				user = new User();
 				user.setId(rs.getString("id"));
-				user.setPassword(rs.getString("pw"));
+				user.setPassword(rs.getString("password")); // [수정] pw -> password
 				user.setName(rs.getString("name"));
 				user.setGender(rs.getString("gender"));
 				user.setBirth(rs.getString("birth"));
-				user.setMail(rs.getString(rs.getString("mail")));
+				user.setMail(rs.getString("mail")); // [수정] 이중 getString 제거
 				user.setPhone(rs.getString("phone"));
 				user.setAddress(rs.getString("address"));
-				user.setRegistDay(rs.getString("reigst_day"));
+				user.setRegistDay(rs.getString("regist_day")); // [수정] 오타 reigst -> regist
 			}
 			rs.close();
 		} catch (Exception e) {
@@ -125,14 +118,7 @@ public class UserRepository extends JDBConnection {
 	 */
 	public int update(User user) {
 		int result = 0;
-		String sql = "UPDATE user"
-					+ "SET name=?"
-					+ ", gender=?"
-					+ ", birth=?"
-					+ ", mail=?"
-					+ ", phone=?"
-					+ ", address=?"
-				    + "WHERE id=?";
+		String sql = "UPDATE user SET name=?, gender=?, birth=?, mail=?, phone=?, address=?, password=? WHERE id=?";
 		
 		try {
 			psmt = con.prepareStatement(sql);
@@ -142,7 +128,8 @@ public class UserRepository extends JDBConnection {
 			psmt.setString(4, user.getMail());
 			psmt.setString(5, user.getPhone());
 			psmt.setString(6, user.getAddress());
-			psmt.setString(7, user.getId());
+			psmt.setString(7, user.getPassword()); // 패스워드 파라미터 매핑 필요
+			psmt.setString(8, user.getId());
 			
 			result = psmt.executeUpdate();
 		} catch (SQLException e) {
@@ -212,7 +199,7 @@ public class UserRepository extends JDBConnection {
 	        	persistentLogin.setpNo( rs.getInt("p_no")); 
 	        	persistentLogin.setUserId( rs.getString("user_id") ); 
 	        	persistentLogin.setToken( rs.getString("token") ); 
-	        	persistentLogin.setDate( rs.getTimestamp("token") ); 
+	        	persistentLogin.setDate( rs.getTimestamp("date") ); // [수정] token -> date (DB컬럼명)
 	        }
 	        rs.close();
 	    } catch (SQLException e) {
@@ -242,7 +229,7 @@ public class UserRepository extends JDBConnection {
 	            persistentLogin.setpNo(rs.getInt("p_no")); 
 	            persistentLogin.setUserId(rs.getString("user_id")); 
 	            persistentLogin.setToken(rs.getString("token")); 
-	            persistentLogin.setDate(rs.getTimestamp("date")); // date 필드로 변경
+	            persistentLogin.setDate(rs.getTimestamp("date")); // [수정] date 필드로 변경 확인
 	        }
 	        rs.close();
 	    } catch (SQLException e) {
@@ -287,9 +274,9 @@ public class UserRepository extends JDBConnection {
 	public String updateToken(String userId) {
 	    int result = 0;
 	    String sql = "UPDATE persistent_logins"
-	    		+ "SET token = ?"
+	    		+ " SET token = ?"
 	    		+ ", date = now()"
-	    		+ "WHERE user_id = ?";
+	    		+ " WHERE user_id = ?";
 	    String token = UUID.randomUUID().toString();
 	    try {
 	    	psmt = con.prepareStatement(sql);
@@ -329,22 +316,4 @@ public class UserRepository extends JDBConnection {
 	    return result;
 	}
 
-
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
